@@ -32,10 +32,10 @@ export function Post({ post }: { post: types.Post }) {
 
   return (
     <Card className="mb-5 bg-black border border-green-500 text-green-500">
-      <CardHeader className="flex flex-row items-center justify-between gap-4 border-b border-green-500">
+      <CardHeader className="flex flex-wrap md:flex-row justify-between gap-4 border-b border-green-500">
         {/* Author Info Container */}
         <div className="flex items-center gap-4">
-          <Avatar className="w-8 h-8 border border-green-500">
+          <Avatar className="w-12 h-12 border border-green-500">
             <AvatarImage src={post.author.avatar} alt={post.author.name} />
             <AvatarFallback className="bg-green-500 text-black">
               {post.author.name[0]}
@@ -57,7 +57,7 @@ export function Post({ post }: { post: types.Post }) {
       <CardContent className="pt-4">
         <div className="relative w-full h-64 mb-4 overflow-auto">
           {post.text.split("\n\n").map((p, i) => (
-            <p className="pb-3" key={i}>
+            <p className="pb-3" key={`p_${post.id}_${i}`}>
               {p}
             </p>
           ))}
@@ -90,6 +90,7 @@ export function Post({ post }: { post: types.Post }) {
         </div>
         <form onSubmit={handleAddComment} className="flex w-full gap-2">
           <Input
+            id="comment"
             type="text"
             placeholder="Add a comment..."
             value={newComment}
