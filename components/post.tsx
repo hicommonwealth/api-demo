@@ -1,33 +1,25 @@
 "use client"
 
-import { FormEvent, useState } from "react"
+import { useState } from "react"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Heart, MessageCircle } from "lucide-react"
 import { Comment } from "@/components/comment"
 import { formatDateTime } from "@/lib/utils"
 import type * as types from "@/lib/types"
-import { addComment, likePost } from "@/lib/actions"
+import { likePost } from "@/lib/actions"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
+import NewComment from "./new-comment"
 
 export function Post({ post }: { post: types.Post }) {
   const [likes, setLikes] = useState(post.likes)
   const [comments, setComments] = useState(post.comments)
-  const [newComment, setNewComment] = useState("")
 
   const handleLike = async () => {
     const updatedLikes = await likePost(post.id)
     setLikes(updatedLikes!)
-  }
-
-  const handleAddComment = async (e: FormEvent) => {
-    e.preventDefault()
-    if (newComment.trim()) {
-      const updatedComment = await addComment(post.id, newComment)
-      setComments([...comments, ...updatedComment!])
-      setNewComment("")
-    }
   }
 
   return (
@@ -55,12 +47,8 @@ export function Post({ post }: { post: types.Post }) {
         </div>
       </CardHeader>
       <CardContent className="pt-4">
-        <div className="relative w-full h-64 mb-4 overflow-auto">
-          {post.text.split("\n\n").map((p, i) => (
-            <p className="pb-3" key={`p_${post.id}_${i}`}>
-              {p}
-            </p>
-          ))}
+        <div className="prose prose-terminal relative max-w-none h-auto max-h-96 mb-4 overflow-auto">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.text}</ReactMarkdown>
         </div>
       </CardContent>
       <CardFooter className="flex flex-col items-start gap-4 border-t border-green-500">
@@ -84,26 +72,11 @@ export function Post({ post }: { post: types.Post }) {
           </Button>
         </div>
         <div className="w-full space-y-2">
-          {comments.map((comment) => (
-            <Comment key={comment.id} comment={comment} />
+          {comments.map((comment, index) => (
+            <Comment key={`c_${post.id}_${index}`} comment={comment} />
           ))}
         </div>
-        <form onSubmit={handleAddComment} className="flex w-full gap-2">
-          <Input
-            id="comment"
-            type="text"
-            placeholder="Add a comment..."
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            className="flex-grow bg-black text-green-500 border-green-500 focus:ring-green-500"
-          />
-          <Button
-            type="submit"
-            className="bg-green-500 text-black hover:bg-green-600"
-          >
-            Post
-          </Button>
-        </form>
+        <NewComment post={post} comments={comments} setComments={setComments} />
       </CardFooter>
     </Card>
   )

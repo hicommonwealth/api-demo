@@ -23,14 +23,13 @@ export function Feed() {
   // Attach scroll event listener to handle infinite scrolling
   useEffect(() => {
     const handleScroll = () => {
+      const scroll = window.innerHeight + document.documentElement.scrollTop
       if (
-        window.innerHeight + document.documentElement.scrollTop >=
-          document.documentElement.scrollHeight &&
+        scroll >= document.documentElement.scrollHeight &&
         hasNextPage &&
         !isFetchingNextPage
-      ) {
+      )
         fetchNextPage()
-      }
     }
 
     window.addEventListener("scroll", handleScroll)

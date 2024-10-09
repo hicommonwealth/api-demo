@@ -26,8 +26,16 @@ function getPost(id: number): Post {
     title: chance.sentence(),
     text: Array(ps)
       .fill(null)
-      .map(() => chance.paragraph())
-      .join("\n\n"),
+      .map(
+        () => `# ${chance.name()}
+
+- ${chance.state()} is not **${chance.state()}**
+- ${chance.animal()} is not **${chance.animal()}**
+      
+${chance.paragraph()}
+      `
+      )
+      .join("\n"),
     likes: ["0x123"],
     comments: [getComment(1)],
     createdAt: new Date().toISOString(),

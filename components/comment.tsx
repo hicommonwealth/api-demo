@@ -2,6 +2,8 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import type * as types from "@/lib/types"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 
 export function Comment({ comment }: { comment: types.Comment }) {
   return (
@@ -14,7 +16,11 @@ export function Comment({ comment }: { comment: types.Comment }) {
       </Avatar>
       <div>
         <p className="text-sm font-semibold">{comment.author.name}</p>
-        <p className="text-sm opacity-90">{comment.content}</p>
+        <div className="text-sm opacity-90 prose prose-terminal p-3">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {comment.content}
+          </ReactMarkdown>
+        </div>
       </div>
     </div>
   )
