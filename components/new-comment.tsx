@@ -68,15 +68,16 @@ export default function NewComment({
         onBlur={() => setIsFocused(false)} // Show the placeholder on blur if empty
         className="w-full bg-black text-green-500 border border-green-500 p-2 focus:ring-green-500"
       />
-      <div className="flex justify-end">
-        <Button
-          type="submit"
-          className="bg-green-500 text-black hover:bg-green-600"
-          disabled={!newComment.trim()}
-        >
-          Submit
-        </Button>
-      </div>
+      {newComment.trim() && (
+        <div className="flex justify-end">
+          <Button
+            type="submit"
+            className="bg-green-500 text-black hover:bg-green-600"
+          >
+            Submit
+          </Button>
+        </div>
+      )}
     </form>
   )
 }

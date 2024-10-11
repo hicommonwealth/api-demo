@@ -12,6 +12,7 @@ import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import NewComment from "./new-comment"
 import { CommonApi } from "@commonxyz/api-client"
+import { useAlert } from "./alert-provider"
 
 export function Post({
   post,
@@ -20,14 +21,19 @@ export function Post({
 }) {
   const [likes, setLikes] = useState([""]) //post.likes
   const [comments, setComments] = useState(post.recentComments ?? [])
+  const { showAlert } = useAlert()
 
   const handleLike = async () => {
-    const response = await likePost(post.id)
-    setLikes([...likes, response.reaction])
+    try {
+      const response = await likePost(post.id)
+      setLikes([...likes, response.reaction])
+    } catch (error) {
+      showAlert({ error, description: "Failed to like post." })
+    }
   }
 
   return (
-    <Card className="mb-5 bg-black border border-green-500 text-green-500">
+    <Card className="mb-10 bg-black border border-green-500 text-green-500 shadow-lg shadow-green-500/50">
       <CardHeader className="flex flex-wrap md:flex-row justify-between gap-4 border-b border-green-500">
         <div className="flex-1 text-left">
           <h2 className="text-xl pl-1 pb-2">{post.title}</h2>
@@ -49,7 +55,7 @@ export function Post({
           </div>
         </div>
 
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-2 p-3 rounded-3xl shadow-lg shadow-green-500/50">
           <Avatar className="w-12 h-12 border border-green-500">
             <AvatarImage src={post.communityIcon} alt={post.communityId} />
           </Avatar>
@@ -59,7 +65,7 @@ export function Post({
         </div>
       </CardHeader>
       <CardContent className="pt-4">
-        <div className="prose prose-terminal relative max-w-none h-auto max-h-96 mb-4 overflow-auto">
+        <div className="prose prose-terminal relative max-w-none h-auto max-h-fit mb-4 overflow-auto">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.body}</ReactMarkdown>
         </div>
       </CardContent>
