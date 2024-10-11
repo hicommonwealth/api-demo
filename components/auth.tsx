@@ -15,6 +15,7 @@ export function Auth({ children }: { children: React.ReactNode }) {
           })
           if (accounts.length > 0) {
             setAddress(accounts[0])
+            window.localStorage.setItem("address", accounts[0])
           }
         } catch (error) {
           console.error("Failed to get Metamask accounts", error)

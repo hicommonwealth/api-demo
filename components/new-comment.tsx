@@ -2,12 +2,16 @@ import React, { FormEvent, useState } from "react"
 import { Textarea } from "@/components/ui/textarea" // Adjust to your Textarea component path
 import { Button } from "./ui/button"
 import { addComment } from "@/lib/actions"
-import type * as types from "@/lib/types"
+import { CommonApi } from "@commonxyz/api-client"
 
 interface NewCommentProps {
-  post: { id: number }
-  comments: Array<types.Comment>
-  setComments: React.Dispatch<React.SetStateAction<Array<types.Comment>>>
+  post: CommonApi.GetUserActivityResponseItem
+  comments: Array<CommonApi.GetUserActivityResponseItemRecentCommentsItem>
+  setComments: React.Dispatch<
+    React.SetStateAction<
+      Array<CommonApi.GetUserActivityResponseItemRecentCommentsItem>
+    >
+  >
 }
 
 export default function NewComment({
@@ -22,7 +26,10 @@ export default function NewComment({
     e?.preventDefault()
     if (newComment.trim()) {
       const updatedComment = await addComment(post.id, newComment)
-      setComments([...comments, ...updatedComment!])
+      setComments([
+        ...comments,
+        updatedComment as unknown as CommonApi.GetUserActivityResponseItemRecentCommentsItem,
+      ])
       setNewComment("")
     }
   }
