@@ -1,30 +1,33 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import { Button } from "@/components/ui/button"
+import { useAuthStore } from "./state"
 
 export function Auth({ children }: { children: React.ReactNode }) {
-  const [address, setAddress] = useState<string | null>(null)
+  const { address, setAddress } = useAuthStore()
 
   useEffect(() => {
     const checkMetamask = async () => {
-      if (typeof window.ethereum !== "undefined") {
-        try {
-          const accounts = await window.ethereum.request({
-            method: "eth_accounts",
-          })
-          if (accounts.length > 0) {
+      if (
+        typeof window.ethereum !== "undefined" &&
+        window.ethereum.isMetaMask
+      ) {
+        window.ethereum
+          .request({ method: "eth_accounts" })
+          .then((accounts: string[]) => {
             setAddress(accounts[0])
-            window.localStorage.setItem("address", accounts[0])
-          }
-        } catch (error) {
-          console.error("Failed to get Metamask accounts", error)
-        }
+          })
+
+        window.ethereum.on!("accountsChanged", (...accounts: unknown[]) => {
+          const address = accounts[0] as string
+          setAddress(address as string)
+        })
       }
     }
 
     checkMetamask()
-  }, [address])
+  }, [address, setAddress])
 
   const connectMetamask = async () => {
     if (typeof window.ethereum !== "undefined") {

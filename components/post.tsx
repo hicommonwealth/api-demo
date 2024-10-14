@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Heart, MessageCircle } from "lucide-react"
 import { Comment } from "@/components/comment"
 import { formatDateTime } from "@/lib/utils"
-import { likePost } from "@/lib/actions"
+import { deleteComment, likePost, updateComment } from "@/lib/actions"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import NewComment from "./new-comment"
@@ -29,6 +29,28 @@ export function Post({
       setLikes([...likes, response.reaction])
     } catch (error) {
       showAlert({ error, description: "Failed to like post." })
+    }
+  }
+
+  const handleEditComment = async (id: number, newText: string) => {
+    try {
+      await updateComment(id, newText)
+      const comment = comments.find((comment) => comment.id === id)
+      if (comment) {
+        comment.text = newText
+      }
+      setComments([...comments])
+    } catch (error) {
+      showAlert({ error, description: "Failed to edit comment." })
+    }
+  }
+
+  const handleDeleteComment = async (id: number) => {
+    try {
+      await deleteComment(id)
+      setComments(comments.filter((comment) => comment.id !== id))
+    } catch (error) {
+      showAlert({ error, description: "Failed to delete comment." })
     }
   }
 
@@ -91,7 +113,12 @@ export function Post({
         </div>
         <div className="w-full space-y-2">
           {post.recentComments?.map((comment, index) => (
-            <Comment key={`c_${post.id}_${index}`} comment={comment} />
+            <Comment
+              key={`c_${post.id}_${index}`}
+              comment={comment}
+              onEdit={handleEditComment}
+              onDelete={handleDeleteComment}
+            />
           ))}
         </div>
         <NewComment post={post} comments={comments} setComments={setComments} />

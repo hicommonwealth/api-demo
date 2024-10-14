@@ -19,17 +19,32 @@ export async function getPosts(page: number) {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// export async function getPost(postId: number) {
+//   return await commonClient.thread.getThread({ postId })
+// }
+
 export async function likePost(postId: number) {
   return await commonClient.reaction.createThreadReaction({
     threadId: postId,
   })
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function addComment(postId: number, content: string) {
+export async function createComment(postId: number, content: string) {
   return await commonClient.comment.createComment({
     threadId: postId,
+    text: content,
+  })
+}
+
+export async function deleteComment(commentId: number) {
+  return await commonClient.comment.deleteComment({
+    commentId,
+  })
+}
+
+export async function updateComment(commentId: number, content: string) {
+  return await commonClient.comment.updateComment({
+    commentId,
     text: content,
   })
 }
