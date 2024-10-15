@@ -7,6 +7,7 @@ import remarkGfm from "remark-gfm"
 import { useState } from "react"
 import { Edit, Trash } from "lucide-react" // Importing Lucide icons
 import { useAuthStore } from "./state"
+import { formatDateTime } from "@/lib/utils"
 
 export function Comment({
   comment,
@@ -49,22 +50,27 @@ export function Comment({
       </Avatar>
       <div className="flex flex-col w-full">
         <div className="flex gap-2">
-          <p className="text-sm">{comment.profileName ?? "Anonymous"}</p>
+          <div className="flex flex-1 text-sm">
+            {comment.profileName ?? "Anonymous"}
+            <small className="opacity-70 pl-3">
+              {formatDateTime(comment.createdAt)}
+            </small>
+          </div>
           {isAuthor && !isEditing && (
-            <>
+            <div className="flex">
               <button
-                className="text-xs text-blue-500 hover:underline flex items-center gap-1"
+                className="text-xs hover:underline flex items-center gap-1 pr-2"
                 onClick={handleEditClick}
               >
                 <Edit className="w-4 h-4" />
               </button>
               <button
-                className="text-xs text-red-500 hover:underline flex items-center gap-1"
+                className="text-xs hover:underline flex items-center gap-1 pr-2"
                 onClick={handleDeleteClick}
               >
                 <Trash className="w-4 h-4" />
               </button>
-            </>
+            </div>
           )}
         </div>
 
@@ -77,10 +83,7 @@ export function Comment({
               onChange={(e) => setEditedText(e.target.value)}
             />
             <div className="flex gap-2">
-              <button
-                className="text-sm text-blue-500"
-                onClick={handleSaveClick}
-              >
+              <button className="text-sm" onClick={handleSaveClick}>
                 Save
               </button>
               <button
