@@ -1,8 +1,16 @@
+# api-demo
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
 
-First, run the development server:
+- First, run the commonwealth application locally and point the environment variable `HOST` to the address of the commonwealth API v1. The default configuration is set to `localhost:3000` and will be updated to the production url once the new API is deployed.
+
+- Make sure you generate an API key associated with your address. You can do this from the `Edit Profile` page in the commonwealth application.
+
+- Copy the API key and configure your environment variables in a local `.env` file. The `.env.example` file contains the required variables.
+
+- Run the development server (it might start on port 3001 when the commonwealth app is running on port 3000):
 
 ```bash
 npm run dev
