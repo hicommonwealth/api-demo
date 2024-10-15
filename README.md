@@ -29,8 +29,25 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Using the Common API
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+To use the Common API, create a new instance of the `CommonApiClient` class by passing in your API key and address. API calls should be executed on the backend to protect your API keys. To achieve this, we wrap the calls in `async functions` and utilize the `use server` directive in lib/actions.ts.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```ts
+import { CommonApiClient } from "@commonxyz/api-client"
+
+const client = new CommonApiClient({
+  environment: "dev",
+  apiKey: "YOUR_API_KEY",
+  address: "YOUR_ADDRESS",
+})
+
+const response = await client.user.getUserActivity()
+```
+
+## Remaining Issues
+
+- The `getPost` function is not implemented yet, and will be used to refresh posts in the UI after mutations.
+- Error handling middleware needs to be refined to repond with a proper error message.
+- Request/Response schemas are camelized by the API generator. We should investigate is there is an option to keep them as snake_case.
+- Scenarios with user addresses not owning the API key are not supported yet.
