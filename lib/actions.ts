@@ -1,6 +1,6 @@
 "use server"
 
-import { CommonApiClient } from "@commonxyz/api-client"
+import { CommonApi, CommonApiClient } from "@commonxyz/api-client"
 import dotenv from "dotenv"
 
 dotenv.config()
@@ -12,17 +12,24 @@ const client = new CommonApiClient({
 })
 
 export async function getPosts(page: number) {
-  const response = await client.user.getUserActivity()
+  const response = await client.user.getUserActivity({
+    commentLimit: 5,
+  })
   return {
     posts: response,
     nextPage: page,
   }
 }
 
-// TODO: implement whe api is ready
-// export async function getPost(postId: number) {
-//   return await commonClient.thread.getThread({ postId })
-// }
+export async function getComments(postId: number) {
+  return await client.comment.getComments({
+    threadId: postId,
+    limit: "5",
+    orderBy: "created_at",
+    orderDirection: CommonApi.GetCommentsRequestOrderDirection.Desc,
+    includeUser: true,
+  })
+}
 
 export async function likePost(postId: number) {
   return await client.reaction.createThreadReaction({
