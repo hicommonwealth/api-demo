@@ -1,12 +1,11 @@
 import React, { FormEvent, useState } from "react"
 import { Textarea } from "@/components/ui/textarea" // Adjust to your Textarea component path
 import { Button } from "./ui/button"
-import { createComment } from "@/lib/actions"
+import { createComment, getComments } from "@/lib/actions"
 import { CommonApi } from "@commonxyz/api-client"
 
 interface NewCommentProps {
   post: CommonApi.GetUserActivityResponseItem
-  comments: Array<CommonApi.GetUserActivityResponseItemRecentCommentsItem>
   setComments: React.Dispatch<
     React.SetStateAction<
       Array<CommonApi.GetUserActivityResponseItemRecentCommentsItem>
@@ -14,21 +13,26 @@ interface NewCommentProps {
   >
 }
 
-export default function NewComment({
-  post,
-  comments,
-  setComments,
-}: NewCommentProps) {
+export default function NewComment({ post, setComments }: NewCommentProps) {
   const [newComment, setNewComment] = useState("")
   const [isFocused, setIsFocused] = useState(false)
 
   const handler = async (e?: FormEvent) => {
     e?.preventDefault()
     if (newComment.trim()) {
-      const updatedComment = await createComment(post.id, newComment)
+      await createComment(post.id, newComment)
+      const updadatedComments = await getComments(post.id)
       setComments([
-        ...comments,
-        updatedComment as unknown as CommonApi.GetUserActivityResponseItemRecentCommentsItem,
+        ...updadatedComments.results.map((c) => ({
+          id: c.id!,
+          text: c.text,
+          createdAt: c.createdAt!.toISOString(),
+          deletedAt: c.deletedAt?.toISOString(),
+          address: c.address!.address,
+          userId: c.address!.userId,
+          profileName: c.address!.user!.profile.name,
+          profileAvatar: c.address!.user!.profile.avatarUrl,
+        })),
       ])
       setNewComment("")
     }

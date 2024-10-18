@@ -112,7 +112,7 @@ export function Post({
           </Button>
         </div>
         <div className="w-full space-y-2">
-          {post.recentComments?.map((comment, index) => (
+          {comments?.map((comment, index) => (
             <Comment
               key={`c_${post.id}_${index}`}
               comment={comment}
@@ -121,7 +121,7 @@ export function Post({
             />
           ))}
         </div>
-        <NewComment post={post} comments={comments} setComments={setComments} />
+        <NewComment post={post} setComments={setComments} />
       </CardFooter>
     </Card>
   )

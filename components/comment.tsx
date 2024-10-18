@@ -39,6 +39,7 @@ export function Comment({
 
   // seems like metamask is coverting address to lowercase
   const isAuthor = comment.address.toLowerCase() == address
+  const isDeleted = typeof comment.deletedAt !== "undefined"
 
   return (
     <div className="flex items-start gap-2 mb-2 font-mono">
@@ -56,7 +57,7 @@ export function Comment({
               {formatDateTime(comment.createdAt)}
             </small>
           </div>
-          {isAuthor && !isEditing && (
+          {isAuthor && !isEditing && !isDeleted && (
             <div className="flex">
               <button
                 className="text-xs hover:underline flex items-center gap-1 pr-2"
@@ -95,7 +96,11 @@ export function Comment({
             </div>
           </div>
         ) : (
-          <div className="text-sm opacity-90 prose prose-terminal p-3 w-full !max-w-full">
+          <div
+            className={`text-sm opacity-90 prose prose-terminal p-3 w-full !max-w-full ${
+              isDeleted && "line-through text-gray-500"
+            }`}
+          >
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {comment.text}
             </ReactMarkdown>
