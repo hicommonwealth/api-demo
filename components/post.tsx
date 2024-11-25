@@ -17,10 +17,10 @@ import { useAlert } from "./alert-provider"
 export function Post({
   post,
 }: {
-  post: CommonApi.GetUserActivityResponseItem
+  post: CommonApi.GetUserActivityResponseResultsItem
 }) {
   const [likes, setLikes] = useState([""]) //post.likes
-  const [comments, setComments] = useState(post.recentComments ?? [])
+  const [comments, setComments] = useState(post.recent_comments ?? [])
   const { showAlert } = useAlert()
 
   const handleLike = async () => {
@@ -37,7 +37,7 @@ export function Post({
       await updateComment(id, newText)
       const comment = comments.find((comment) => comment.id === id)
       if (comment) {
-        comment.text = newText
+        comment.body = newText
       }
       setComments([...comments])
     } catch (error) {
@@ -63,15 +63,15 @@ export function Post({
             <div className="flex items-center gap-0">
               <Avatar className="w-8 h-8 border border-green-500">
                 <AvatarImage
-                  src={post.profileAvatar}
-                  alt={post.profileName ?? "Anonymous"}
+                  src={post.profile_avatar}
+                  alt={post.profile_name ?? "Anonymous"}
                 />
               </Avatar>
             </div>
             <div>
-              <p className="text-sm">{post.profileName ?? "Anonymous"}</p>
+              <p className="text-sm">{post.profile_name ?? "Anonymous"}</p>
               <p className="text-xs opacity-70">
-                {formatDateTime(post.createdAt!)}
+                {formatDateTime(post.created_at!)}
               </p>
             </div>
           </div>
@@ -79,10 +79,10 @@ export function Post({
 
         <div className="flex flex-col items-center gap-2 p-3 rounded-3xl shadow-lg shadow-green-500/50">
           <Avatar className="w-12 h-12 border border-green-500">
-            <AvatarImage src={post.communityIcon} alt={post.communityId} />
+            <AvatarImage src={post.community_icon} alt={post.community_id} />
           </Avatar>
           <div className="text-left">
-            <p className="text-lg">{post.communityId}</p>
+            <p className="text-lg">{post.community_id}</p>
           </div>
         </div>
       </CardHeader>
@@ -108,7 +108,7 @@ export function Post({
             className="text-green-500 hover:text-green-400"
           >
             <MessageCircle className="mr-2 h-4 w-4" />
-            {post.numberOfComments}
+            {post.number_of_comments}
           </Button>
         </div>
         <div className="w-full space-y-2">

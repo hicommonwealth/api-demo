@@ -43,7 +43,7 @@ export function Feed() {
   ) : (
     <>
       {data.pages.map((page) =>
-        page.posts.map((post) => <Post key={post.id} post={post} />)
+        page.posts.results.map((post) => <Post key={post.id} post={post} />)
       )}
     </>
   )

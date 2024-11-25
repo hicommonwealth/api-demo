@@ -13,7 +13,7 @@ const client = new CommonApiClient({
 
 export async function getPosts(page: number) {
   const response = await client.user.getUserActivity({
-    commentLimit: 5,
+    comment_limit: 5,
   })
   return {
     posts: response,
@@ -23,36 +23,36 @@ export async function getPosts(page: number) {
 
 export async function getComments(postId: number) {
   return await client.comment.getComments({
-    threadId: postId,
+    thread_id: postId,
     limit: "5",
-    orderBy: "created_at",
-    orderDirection: CommonApi.GetCommentsRequestOrderDirection.Desc,
-    includeUser: true,
+    order_by: "created_at",
+    order_direction: CommonApi.GetCommentsRequestOrderDirection.Desc,
+    include_user: true,
   })
 }
 
 export async function likePost(postId: number) {
   return await client.reaction.createThreadReaction({
-    threadId: postId,
+    thread_id: postId,
   })
 }
 
 export async function createComment(postId: number, content: string) {
   return await client.comment.createComment({
-    threadId: postId,
-    text: content,
+    thread_id: postId,
+    body: content,
   })
 }
 
-export async function deleteComment(commentId: number) {
+export async function deleteComment(comment_id: number) {
   return await client.comment.deleteComment({
-    commentId,
+    comment_id,
   })
 }
 
-export async function updateComment(commentId: number, content: string) {
+export async function updateComment(comment_id: number, content: string) {
   return await client.comment.updateComment({
-    commentId,
-    text: content,
+    comment_id,
+    body: content,
   })
 }
