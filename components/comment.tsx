@@ -14,12 +14,12 @@ export function Comment({
   onEdit,
   onDelete,
 }: {
-  comment: CommonApi.GetUserActivityResponseItemRecentCommentsItem
+  comment: CommonApi.GetUserActivityResponseResultsItemRecentCommentsItem
   onEdit: (id: number, newText: string) => void
   onDelete: (id: number) => void
 }) {
   const [isEditing, setIsEditing] = useState(false)
-  const [editedText, setEditedText] = useState(comment.text)
+  const [editedText, setEditedText] = useState(comment.body)
   const { address } = useAuthStore()
 
   const handleEditClick = () => {
@@ -39,22 +39,23 @@ export function Comment({
 
   // seems like metamask is coverting address to lowercase
   const isAuthor = comment.address.toLowerCase() == address
-  const isDeleted = typeof comment.deletedAt !== "undefined"
+  const isDeleted =
+    typeof comment.deleted_at !== "undefined" && comment.deleted_at !== null
 
   return (
     <div className="flex items-start gap-2 mb-2 font-mono">
       <Avatar className="w-6 h-6 border border-green-500">
         <AvatarImage
-          src={comment.profileAvatar}
-          alt={comment.profileName ?? "Anonymous"}
+          src={comment.profile_avatar}
+          alt={comment.profile_name ?? "Anonymous"}
         />
       </Avatar>
       <div className="flex flex-col w-full">
         <div className="flex gap-2">
           <div className="flex flex-1 text-sm">
-            {comment.profileName ?? "Anonymous"}
+            {comment.profile_name ?? "Anonymous"}
             <small className="opacity-70 pl-3">
-              {formatDateTime(comment.createdAt)}
+              {formatDateTime(comment.created_at!)}
             </small>
           </div>
           {isAuthor && !isEditing && !isDeleted && (
@@ -102,7 +103,7 @@ export function Comment({
             }`}
           >
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {comment.text}
+              {comment.body}
             </ReactMarkdown>
           </div>
         )}

@@ -5,10 +5,10 @@ import { createComment, getComments } from "@/lib/actions"
 import { CommonApi } from "@commonxyz/api-client"
 
 interface NewCommentProps {
-  post: CommonApi.GetUserActivityResponseItem
+  post: CommonApi.GetUserActivityResponseResultsItem
   setComments: React.Dispatch<
     React.SetStateAction<
-      Array<CommonApi.GetUserActivityResponseItemRecentCommentsItem>
+      Array<CommonApi.GetUserActivityResponseResultsItemRecentCommentsItem>
     >
   >
 }
@@ -25,13 +25,13 @@ export default function NewComment({ post, setComments }: NewCommentProps) {
       setComments([
         ...updadatedComments.results.map((c) => ({
           id: c.id!,
-          text: c.text,
-          createdAt: c.createdAt!.toISOString(),
-          deletedAt: c.deletedAt?.toISOString(),
-          address: c.address!.address,
-          userId: c.address!.userId,
-          profileName: c.address!.user!.profile.name,
-          profileAvatar: c.address!.user!.profile.avatarUrl,
+          body: c.body,
+          created_at: c.created_at!,
+          deleted_at: c.deleted_at,
+          address: c.Address!.address!,
+          user_id: c.Address!.User!.id!,
+          profile_name: c.Address!.User!.profile.name,
+          profile_avatar: c.Address!.User!.profile.avatar_url,
         })),
       ])
       setNewComment("")
